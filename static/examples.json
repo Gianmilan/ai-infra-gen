@@ -1,0 +1,22 @@
+{
+  "examples": [
+    {
+      "title": "Simple Web App",
+      "description": "Load balancer with EC2 instances",
+      "category": "terraform",
+      "requirements": "I need a basic web application infrastructure with:\n- Application Load Balancer\n- 3 EC2 instances (t3.medium)\n- Auto-scaling group\n- Security groups configured properly\n- Tags for production environment",
+    },
+    {
+      "title": "Database Setup",
+      "description": "RDS PostgreSQL with Multi-AZ",
+      "category": "terraform",
+      "requirements": "I need:\n- RDS PostgreSQL database (Multi-AZ)\n- Private subnet\n- Security group allowing app tier access\n- Automated backups enabled\n- Encryption at rest"
+    },
+    {
+      "title": "Microservice Deployment",
+      "description": "Kubernetes deployment with service",
+      "category": "kubernetes",
+      "requirements": "Deploy a Flask microservice with:\n- 3 replicas\n- Rolling update strategy\n- Resource limits (500m CPU, 512Mi memory)\n- Health checks\n- LoadBalancer service"
+    }
+  ]
+}
