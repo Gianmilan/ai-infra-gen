@@ -15,7 +15,8 @@ class Config:
     ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
     OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
     OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
-    OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'deepseek-coder')
+    OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL')
+    OLLAMA_TIMEOUT = int(os.environ.get('OLLAMA_TIMEOUT', 600))  # Timeout in seconds
 
     # Caching
     ENABLE_CACHE = os.environ.get('ENABLE_CACHE', 'True') == 'True'

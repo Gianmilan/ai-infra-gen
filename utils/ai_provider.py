@@ -36,20 +36,32 @@ class OllamaProvider:
         self.model = Config.OLLAMA_MODEL
 
     def generate(self, prompt: str, max_tokens: int = 4096) -> str:
-        response = requests.post(
-            f'{self.url}/api/generate',
-            json={
-                'model': self.model,
-                'prompt': prompt,
-                'stream': False,
-                'options': {
-                    'num_predict': max_tokens
-                }
-            },
-            timeout=120
-        )
-        response.raise_for_status()
-        return response.json()['response']
+        print(f"Calling Ollama ({self.model}) with prompt length: {len(prompt)} chars, max_tokens: {max_tokens}")
+
+        try:
+            response = requests.post(
+                f'{self.url}/api/generate',
+                json={
+                    'model': self.model,
+                    'prompt': prompt,
+                    'stream': False,
+                    'options': {
+                        'num_predict': max_tokens,
+                        'temperature': 0.7
+                    }
+                },
+                timeout=Config.OLLAMA_TIMEOUT  # Configurable timeout for Ollama requests
+            )
+            response.raise_for_status()
+            result = response.json()
+
+            print(f"Ollama response received. Length: {len(result['response'])} chars")
+            return result['response']
+
+        except requests.exceptions.Timeout:
+            raise Exception(f"Ollama request timed out after {Config.OLLAMA_TIMEOUT} seconds. The model '{self.model}' may be too slow for this task. Consider using a faster model or increasing OLLAMA_TIMEOUT.")
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Ollama API error: {str(e)}")
 
 
 class OpenAIProvider:

@@ -1,151 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Infrastructure Generator</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #1a1a1a;
-            color: #fff;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-
-        .subtitle {
-            color: #888;
-            margin-bottom: 30px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .panel {
-            background: #2a2a2a;
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid #333;
-        }
-
-        h3 {
-            margin-bottom: 15px;
-            color: #4a9eff;
-        }
-
-        textarea {
-            width: 100%;
-            height: 400px;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            border-radius: 4px;
-            color: #fff;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            padding: 15px;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #4a9eff;
-        }
-
-        button {
-            background: #4a9eff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-weight: 600;
-        }
-
-        button:hover {
-            background: #3a8eef;
-        }
-
-        button:disabled {
-            background: #555;
-            cursor: not-allowed;
-        }
-
-        .status {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            display: none;
-        }
-
-        .status.success {
-            background: #1a3a1a;
-            border: 1px solid #2a5a2a;
-            display: block;
-        }
-
-        .status.error {
-            background: #3a1a1a;
-            border: 1px solid #5a2a2a;
-            display: block;
-        }
-
-        .status.loading {
-            background: #1a2a3a;
-            border: 1px solid #2a3a5a;
-            display: block;
-        }
-
-        .examples {
-            background: #2a2a2a;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #333;
-        }
-
-        .example {
-            background: #1a1a1a;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            cursor: pointer;
-            border: 1px solid #444;
-        }
-
-        .example:hover {
-            border-color: #4a9eff;
-        }
-
-        .example-title {
-            color: #4a9eff;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .example-desc {
-            color: #888;
-            font-size: 14px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 <div class="container">
@@ -154,45 +13,91 @@
 
     <div class="examples">
         <h3>Quick Examples (click to use)</h3>
-        <div class="example" onclick="useExample(this)">
-            <div class="example-title">Simple Web App</div>
-            <div class="example-desc">I need a web application with a load balancer and 3 EC2 instances</div>
-            <div style="display:none;">I need a basic web application infrastructure with:
-                - Application Load Balancer
-                - 3 EC2 instances (t3.medium)
-                - Auto-scaling group
-                - Security groups configured properly
-                - Tags for production environment
-            </div>
+
+        <!-- Terraform Examples -->
+        <div class="example" onclick="useExample(this, 'terraform')">
+            <div class="example-title">🏗️ Simple Web App (Terraform)</div>
+            <div class="example-desc">Web application with load balancer and EC2 instances</div>
+            <div class="example-content">I need a basic web application infrastructure with:
+- Application Load Balancer
+- 3 EC2 instances (t3.medium)
+- Auto-scaling group
+- Security groups configured properly
+- Tags for production environment</div>
         </div>
-        <div class="example" onclick="useExample(this)">
-            <div class="example-title">Database + Cache</div>
+
+        <div class="example" onclick="useExample(this, 'terraform')">
+            <div class="example-title">🏗️ Database + Cache (Terraform)</div>
             <div class="example-desc">RDS PostgreSQL with ElastiCache Redis</div>
-            <div style="display:none;">I need:
-                - RDS PostgreSQL database (Multi-AZ)
-                - ElastiCache Redis cluster
-                - Private subnets for both
-                - Security groups allowing app tier access
-                - Automated backups enabled
-            </div>
+            <div class="example-content">I need:
+- RDS PostgreSQL database (Multi-AZ)
+- ElastiCache Redis cluster
+- Private subnets for both
+- Security groups allowing app tier access
+- Automated backups enabled</div>
         </div>
-        <div class="example" onclick="useExample(this)">
-            <div class="example-title">S3 + CloudFront</div>
+
+        <div class="example" onclick="useExample(this, 'terraform')">
+            <div class="example-title">🏗️ S3 + CloudFront (Terraform)</div>
             <div class="example-desc">Static site hosting with CDN</div>
-            <div style="display:none;">I need infrastructure for a static website:
-                - S3 bucket for hosting
-                - CloudFront distribution
-                - SSL certificate
-                - Proper bucket policies
-                - Access logging enabled
-            </div>
+            <div class="example-content">I need infrastructure for a static website:
+- S3 bucket for hosting
+- CloudFront distribution
+- SSL certificate
+- Proper bucket policies
+- Access logging enabled</div>
+        </div>
+
+        <!-- Kubernetes Examples -->
+        <div class="example" onclick="useExample(this, 'kubernetes')">
+            <div class="example-title">☸️ Web App Deployment (Kubernetes)</div>
+            <div class="example-desc">Deployment with service and ingress</div>
+            <div class="example-content">I need a Kubernetes setup for a web application:
+- Deployment with 3 replicas
+- Service (LoadBalancer type)
+- ConfigMap for environment variables
+- Ingress with TLS
+- Resource limits and requests</div>
+        </div>
+
+        <div class="example" onclick="useExample(this, 'kubernetes')">
+            <div class="example-title">☸️ Microservices Stack (Kubernetes)</div>
+            <div class="example-desc">Multiple services with database</div>
+            <div class="example-content">I need Kubernetes manifests for a microservices application:
+- Frontend deployment and service
+- Backend API deployment and service
+- PostgreSQL StatefulSet
+- Redis deployment
+- Network policies
+- Horizontal Pod Autoscaler</div>
+        </div>
+
+        <div class="example" onclick="useExample(this, 'kubernetes')">
+            <div class="example-title">☸️ Stateful Application (Kubernetes)</div>
+            <div class="example-desc">StatefulSet with persistent storage</div>
+            <div class="example-content">I need Kubernetes resources for a stateful application:
+- StatefulSet with 3 replicas
+- Headless service
+- PersistentVolumeClaims
+- ConfigMap and Secrets
+- Init containers for setup</div>
         </div>
     </div>
 
     <div class="grid">
         <div class="panel">
             <h3>📝 Requirements</h3>
-            <label for="requirements"></label><textarea id="requirements" placeholder="Describe your infrastructure needs...
+            <div class="form-section">
+                <label for="generatorType">Infrastructure Type:</label>
+                <select id="generatorType">
+                    <option value="auto">🤖 Auto-detect</option>
+                    <option value="terraform">🏗️ Terraform (AWS/Azure/GCP)</option>
+                    <option value="kubernetes">☸️ Kubernetes Manifests</option>
+                </select>
+            </div>
+
+            <label for="requirements"></label>
+            <textarea id="requirements" placeholder="Describe your infrastructure needs...
 
 Example:
 I need a highly available web application with:
@@ -204,104 +109,21 @@ I need a highly available web application with:
 - CloudFront for static assets
 - All in us-east-1
 - Production grade security"></textarea>
+
             <button onclick="generate()" id="generateBtn">✨ Generate Infrastructure</button>
             <div id="status" class="status"></div>
         </div>
 
         <div class="panel">
-            <h3>⚡ Generated Terraform</h3>
-            <label for="output"></label><textarea id="output" readonly
-                                                  placeholder="Your infrastructure code will appear here..."></textarea>
+            <h3 id="outputTitle">⚡ Generated Code</h3>
+            <label for="output"></label>
+            <textarea id="output" readonly placeholder="Your infrastructure code will appear here..."></textarea>
             <button onclick="copyCode()" id="copyBtn" disabled>📋 Copy Code</button>
             <button onclick="downloadCode()" id="downloadBtn" disabled>💾 Download</button>
         </div>
     </div>
 </div>
 
-<script>
-    function useExample(element) {
-        document.getElementById('requirements').value = element.querySelector('div[style*="display:none"]').textContent;
-    }
-
-    async function generate() {
-        const requirements = document.getElementById('requirements').value;
-        const btn = document.getElementById('generateBtn');
-        const output = document.getElementById('output');
-        const status = document.getElementById('status');
-        const copyBtn = document.getElementById('copyBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-
-        if (!requirements.trim()) {
-            status.className = 'status error';
-            status.textContent = '❌ Please describe your infrastructure needs';
-            return;
-        }
-
-        btn.disabled = true;
-        btn.textContent = '⏳ Generating...';
-        output.value = '';
-        status.className = 'status loading';
-        status.textContent = '🤖 AI is analyzing your requirements...';
-        copyBtn.disabled = true;
-        downloadBtn.disabled = true;
-
-        try {
-            const response = await fetch('/generate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({requirements})
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                status.className = 'status error';
-                status.textContent = '❌ ' + data.error;
-            } else {
-                output.value = data.code;
-                status.className = 'status success';
-                status.textContent = '✅ Infrastructure code generated! ' +
-                    (data.validate ? '(Validated ✓)' : '(Validation skipped)');
-                copyBtn.disabled = false;
-                downloadBtn.disabled = false;
-            }
-        } catch (error) {
-            status.className = 'status error';
-            status.textContent = '❌ Error: ' + error.message;
-        }
-
-        btn.disabled = false;
-        btn.textContent = '✨ Generate Infrastructure';
-    }
-
-    function copyCode() {
-        const output = document.getElementById('output');
-        output.select();
-        document.execCommand('copy');
-
-        const btn = document.getElementById('copyBtn');
-        const oldText = btn.textContent;
-        btn.textContent = '✅ Copied!';
-        setTimeout(() => btn.textContent = oldText, 2000);
-    }
-
-    function downloadCode() {
-        const code = document.getElementById('output').value;
-        const blob = new Blob([code], {type: 'text/plain'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'main.tf';
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    // Allow Ctrl/Cmd + Enter to generate
-    document.getElementById('requirements').addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            generate();
-        }
-    });
-</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

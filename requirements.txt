@@ -1,3 +1,4 @@
+openai
 flask==3.1.2
 anthropic==0.69.0
 requests==2.32.5

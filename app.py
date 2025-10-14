@@ -58,6 +58,45 @@ def generate_kubernetes():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/generate/auto', methods=['POST'])
+def generate_auto():
+    print("Auto detecting Terraform or Kubernetes...")
+    try:
+        data = request.json
+        requirements = data.get('requirements', '')
+
+        if not requirements:
+            return jsonify({'error': 'No requirements provided'}), 400
+
+        req_lower = requirements.lower()
+
+        k8s_keywords = ['kubernetes', 'k8s', 'pod', 'deployment', 'service',
+                        'namespace', 'configmap', 'secret', 'ingress',
+                        'statefulset', 'daemonset', 'helm']
+
+        tf_keywords = ['terraform', 'aws', 'azure', 'gcp', 'ec2', 's3',
+                       'rds', 'lambda', 'cloudfront', 'elasticache', 'vpc']
+
+        k8s_score = sum(1 for kw in k8s_keywords if kw in req_lower)
+        tf_score = sum(1 for kw in tf_keywords if kw in req_lower)
+
+        if k8s_score > tf_score:
+            print("Detected Kubernetes")
+            result = kubernetes_gen.generate(requirements)
+            result['detected_type'] = 'kubernetes'
+            track_generation('kubernetes')
+
+        else:
+            print("Detected Terraform")
+            result = terraform_gen.generate(requirements)
+            result['detected_type'] = 'terraform'
+            track_generation('terraform')
+
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({'Could not detect Kubernetes nor Terraform keywords from prompt': str(e)}), 500
+
 
 @app.route('/stats')
 def stats():

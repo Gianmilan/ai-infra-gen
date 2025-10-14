@@ -1,0 +1,177 @@
+/* AI Infrastructure Generator Styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-size: 2.5em;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #333;
+}
+
+h3 {
+    margin-bottom: 15px;
+    color: #4a9eff;
+}
+
+/* Form elements */
+select, textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #fff;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    padding: 10px;
+}
+
+select {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: #4a9eff;
+}
+
+textarea {
+    height: 400px;
+    padding: 15px;
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #4a9eff;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #888;
+}
+
+/* Buttons */
+button {
+    background: #4a9eff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+button:hover {
+    background: #3a8eef;
+}
+
+button:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+/* Status messages */
+.status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+.status.success {
+    background: #1a3a1a;
+    border: 1px solid #2a5a2a;
+    display: block;
+}
+
+.status.error {
+    background: #3a1a1a;
+    border: 1px solid #5a2a2a;
+    display: block;
+}
+
+.status.loading {
+    background: #1a2a3a;
+    border: 1px solid #2a3a5a;
+    display: block;
+}
+
+/* Examples section */
+.examples {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+}
+
+.example {
+    background: #1a1a1a;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #444;
+    transition: border-color 0.2s;
+}
+
+.example:hover {
+    border-color: #4a9eff;
+}
+
+.example-title {
+    color: #4a9eff;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.example-desc {
+    color: #888;
+    font-size: 14px;
+}
+
+.example-content {
+    display: none;
+}
+
+/* Form sections */
+.form-section {
+    margin-bottom: 15px;
+}
