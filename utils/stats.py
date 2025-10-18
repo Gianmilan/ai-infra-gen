@@ -27,8 +27,8 @@ def track_generation(infra_type: str):
     stats[infra_type] = stats.get(infra_type, 0) + 1
 
     if not stats['first_used']:
-        stats['first_used'] = datetime.now().isoformat()
-    stats['last_used'] = datetime.now().isoformat()
+        stats['first_used'] = int(datetime.now().timestamp())
+    stats['last_used'] = int(datetime.now().timestamp())
 
     # Save
     stats_file.write_text(json.dumps(stats, indent=2))

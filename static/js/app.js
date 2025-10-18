@@ -36,10 +36,10 @@ async function generate() {
 
     // Update UI to loading state
     btn.disabled = true;
-    btn.textContent = 'Û Generating...';
+    btn.textContent = 'ÔøΩ Generating...';
     output.value = '';
     status.className = 'status loading';
-    status.textContent = '> AI is analyzing your requirements...';
+    status.textContent = 'AI is analyzing your requirements...';
     copyBtn.disabled = true;
     downloadBtn.disabled = true;
 
@@ -64,22 +64,22 @@ async function generate() {
             // Update title based on detected or selected type
             const finalType = data.detected_type || generatorType;
             if (finalType === 'kubernetes') {
-                outputTitle.textContent = '8 Generated Kubernetes Manifests';
+                outputTitle.textContent = 'Generated Kubernetes Manifests';
             } else if (finalType === 'terraform') {
-                outputTitle.textContent = '<◊ Generated Terraform Code';
+                outputTitle.textContent = '<Generated Terraform Code';
             } else {
-                outputTitle.textContent = '° Generated Code';
+                outputTitle.textContent = 'ÔøΩ Generated Code';
             }
 
             // Build status message
-            let statusText = ' Infrastructure code generated! ';
+            let statusText = 'Infrastructure code generated! ';
             if (data.detected_type) {
                 statusText += `(Detected: ${data.detected_type}) `;
             }
-            statusText += (data.validated ? '(Validated )' : '(Validation skipped)');
+            statusText += (data.validated ? '(Validated)' : '(Validation skipped)');
 
             if (data.cached) {
-                statusText += ' =æ (from cache)';
+                statusText += ' =ÔøΩ (from cache)';
             }
 
             status.className = 'status success';
@@ -110,7 +110,7 @@ function copyCode() {
 
     const btn = document.getElementById('copyBtn');
     const oldText = btn.textContent;
-    btn.textContent = ' Copied!';
+    btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = oldText, 2000);
 }
 
@@ -132,6 +132,63 @@ function downloadCode() {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+}
+
+/**
+ * Show cache information
+ */
+async function showCacheInfo() {
+    const cacheInfo = document.getElementById('cacheInfo');
+
+    try {
+        const response = await fetch('/cache/info');
+        const data = await response.json();
+
+        const sizeKB = (data.total_bytes / 1024).toFixed(2);
+        const sizeChars = data.total_chars.toLocaleString();
+
+        cacheInfo.innerHTML = `
+            <strong>Cache Status:</strong> ${data.enabled ? '‚úÖ Enabled' : '‚ùå Disabled'}<br>
+            <strong>Cached Items:</strong> ${data.items}<br>
+            <strong>Total Size:</strong> ${sizeKB} KB (${sizeChars} chars)<br>
+            <strong>Location:</strong> ${data.file_path}
+        `;
+        cacheInfo.style.display = 'block';
+    } catch (error) {
+        cacheInfo.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
+        cacheInfo.style.display = 'block';
+    }
+}
+
+/**
+ * Clear the cache
+ */
+async function clearCache() {
+    if (!confirm('Are you sure you want to clear the cache? This will remove all cached responses.')) {
+        return;
+    }
+
+    const cacheInfo = document.getElementById('cacheInfo');
+
+    try {
+        const response = await fetch('/cache/clear', {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            cacheInfo.innerHTML = `<span style="color: green;">‚úÖ ${data.message}</span>`;
+            cacheInfo.style.display = 'block';
+            setTimeout(() => cacheInfo.style.display = 'none', 3000);
+        } else {
+            cacheInfo.innerHTML = `<span style="color: red;">‚ùå ${data.error}</span>`;
+            cacheInfo.style.display = 'block';
+        }
+    } catch (error) {
+        cacheInfo.innerHTML = `<span style="color: red;">‚ùå Error: ${error.message}</span>`;
+        cacheInfo.style.display = 'block';
+    }
 }
 
 /**

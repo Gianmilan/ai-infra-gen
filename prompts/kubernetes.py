@@ -2,54 +2,87 @@
 Kubernetes generation prompts
 """
 
-KUBERNETES_GENERATION_PROMPT = """You are an expert Kubernetes engineer. Generate production-ready Kubernetes manifests.
+KUBERNETES_GENERATION_PROMPT = """Generate Kubernetes YAML based on requirements. Output ONLY valid YAML.
 
-USER REQUIREMENTS:
-{requirements}
+REQUIREMENTS: {requirements}
 
-INSTRUCTIONS:
-1. Generate complete, working Kubernetes YAML
-2. Include all necessary resources (Deployment, Service, etc.)
-3. Add proper resource limits and requests
-4. Include health checks (liveness and readiness probes)
-5. Use appropriate labels and selectors
-6. Follow Kubernetes best practices
-7. Add comments explaining key decisions
+Generate complete manifests with:
+1. ALL resources needed (Namespace, Deployment, Service, ConfigMap, etc.)
+2. Proper labels (selector.matchLabels MUST match template.metadata.labels)
+3. Resource requests/limits
+4. Liveness/readiness probes
+5. Security settings (runAsNonRoot, readOnlyRootFilesystem)
 
-RESOURCES TO INCLUDE (as needed):
-- Deployment: With replicas, rolling update strategy
-- Service: ClusterIP, NodePort, or LoadBalancer based on requirements
-- ConfigMap: For configuration data
-- Secret: For sensitive data (base64 encoded)
-- HorizontalPodAutoscaler: If scaling is mentioned
-- Ingress: If external access is needed
+Rules:
+- Separate resources with ---
+- No markdown fences, no explanatory text
+- Start with apiVersion: and end with last resource
+- Brief comments allowed for clarity
 
-BEST PRACTICES:
-- Set resource requests and limits
-- Use readiness and liveness probes
-- Implement proper labels and selectors
-- Use namespaces for organization
-- Security context (runAsNonRoot, readOnlyRootFilesystem)
-- Rolling update strategy
-- PodDisruptionBudget for HA
+Example start:
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: app
+        image: nginx
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+  - port: 80
 
-STRUCTURE:
-Separate each resource with '---'
-Order: Namespace → ConfigMap → Secret → Deployment → Service → HPA → Ingress
+# Now generate all resources for: {requirements}"""
 
-RETURN ONLY THE YAML. No explanations.
-"""
+KUBERNETES_FIX_PROMPT = """Fix the validation errors in this Kubernetes YAML. Output ONLY the corrected YAML.
 
-KUBERNETES_FIX_PROMPT = """The following Kubernetes manifests have validation errors. Fix them.
-
-ORIGINAL MANIFESTS:
-```yaml
+BROKEN YAML:
 {yaml_content}
 
-VALIDATION ERRORS:
+ERRORS:
 {errors}
-Fix all issues and return corrected YAML only.
-"""
+
+CRITICAL:
+- Fix label mismatches (selector.matchLabels must match template.metadata.labels exactly)
+- Fix indentation
+- NO markdown, NO backticks, NO explanations
+- Start with apiVersion: and end with last resource
+
+Output only the corrected YAML, nothing else."""
 
 
 def get_kubernetes_prompt(requirements: str) -> str:

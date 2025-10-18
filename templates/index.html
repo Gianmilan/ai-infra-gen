@@ -90,9 +90,9 @@
             <div class="form-section">
                 <label for="generatorType">Infrastructure Type:</label>
                 <select id="generatorType">
-                    <option value="auto">🤖 Auto-detect</option>
-                    <option value="terraform">🏗️ Terraform (AWS/Azure/GCP)</option>
-                    <option value="kubernetes">☸️ Kubernetes Manifests</option>
+                    <option value="auto">Auto-detect</option>
+                    <option value="terraform">Terraform (AWS/Azure/GCP)</option>
+                    <option value="kubernetes">Kubernetes Manifests</option>
                 </select>
             </div>
 
@@ -112,6 +112,12 @@ I need a highly available web application with:
 
             <button onclick="generate()" id="generateBtn">✨ Generate Infrastructure</button>
             <div id="status" class="status"></div>
+
+            <div class="cache-controls">
+                <button onclick="showCacheInfo()" class="secondary-btn">📊 Cache Info</button>
+                <button onclick="clearCache()" class="danger-btn">🗑️ Clear Cache</button>
+            </div>
+            <div id="cacheInfo" class="cache-info"></div>
         </div>
 
         <div class="panel">

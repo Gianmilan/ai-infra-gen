@@ -2,61 +2,56 @@
 Terraform generation prompts
 """
 
-TERRAFORM_GENERATION_PROMPT = """You are an expert DevOps engineer. Generate production-ready Terraform code for AWS.
+TERRAFORM_GENERATION_PROMPT = """Generate Terraform code for AWS Provider 5.x. Output ONLY valid HCL.
 
-USER REQUIREMENTS:
-{requirements}
+REQUIREMENTS: {requirements}
 
-INSTRUCTIONS:
-1. Generate complete, working Terraform code
-2. Use variables for all configurable values
-3. Include proper resource naming with project/environment tags
-4. Follow AWS best practices for security
-5. Add helpful comments explaining key decisions
-6. Include outputs for important values
-7. Use appropriate resource types and configurations
-8. Ensure high availability where needed
+IMPORTANT - AWS Provider 5.x changes:
+- S3: Use separate resources (aws_s3_bucket, aws_s3_bucket_versioning, aws_s3_bucket_lifecycle_configuration)
+- S3: Do NOT use inline versioning/lifecycle blocks
+- Security Groups: Use aws_security_group + aws_vpc_security_group_*_rule resources
 
-STRUCTURE YOUR CODE:
-- Start with terraform block and required providers
-- Then variables (with descriptions and defaults)
-- Then resources (logical grouping)
-- End with outputs
+Generate complete code with:
+1. terraform/provider blocks (AWS ~> 5.0)
+2. variables with sensible defaults
+3. ALL resources needed for requirements
+4. outputs for important values
 
-SECURITY BEST PRACTICES:
-- Use private subnets for databases and app servers
-- Implement least-privilege security groups
-- Enable encryption at rest and in transit
-- Use IMDSv2 for EC2 instances
-- Enable VPC flow logs
-- Use Secrets Manager for sensitive data (not hardcoded)
+Rules:
+- Use double quotes "..." only
+- Start with terraform {{ and end with }}
+- No markdown, no explanations
+- Brief # comments allowed
+- Do NOT use "```", use "heredoc" syntax "<<EOT"
+- Variables are not allowed in varible "bucket_name"
 
-HIGH AVAILABILITY:
-- Multi-AZ deployments where appropriate
-- Auto Scaling Groups for compute
-- RDS Multi-AZ for databases
-- Cross-zone load balancing
+Example:
+terraform {{
+  required_providers {{
+    aws = {{ source = "hashicorp/aws", version = "~> 5.0" }}
+  }}
+}}
 
-RETURN ONLY THE TERRAFORM CODE. No explanations before or after.
-"""
+provider "aws" {{ region = var.region }}
+variable "region" {{ default = "us-east-1" }}
 
-TERRAFORM_FIX_PROMPT = """The following Terraform code has validation errors. Fix them while maintaining the original intent.
+# Generate resources for: {requirements}"""
 
-ORIGINAL CODE:
-```hcl
+TERRAFORM_FIX_PROMPT = """Fix the validation errors in this Terraform code. Output ONLY the corrected HCL.
+
+BROKEN CODE:
 {code}
 
-VALIDATION ERRORS:
+ERRORS:
 {errors}
-INSTRUCTIONS:
 
-Analyze each error carefully
-Fix syntax issues
-Resolve missing dependencies
-Correct resource references
-Maintain the original functionality
+CRITICAL:
+- Use double quotes "..." not single quotes '
+- Use # for comments not //
+- NO backticks, NO explanations, NO markdown
+- Start with terraform {{ and end with the last }}
 
-RETURN ONLY THE CORRECTED TERRAFORM CODE. No explanations."""
+Output only the corrected code, nothing else."""
 
 
 def get_terraform_prompt(requirements: str) -> str:

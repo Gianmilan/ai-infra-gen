@@ -1,4 +1,5 @@
 import os
+import logging
 from pathlib import Path
 
 
@@ -28,6 +29,22 @@ class Config:
 
     # Validation
     ENABLE_VALIDATION = os.environ.get('ENABLE_VALIDATION', 'True') == 'True'
+
+    # Logging
+    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+    @classmethod
+    def setup_logging(cls):
+        """Configure application logging"""
+        logging.basicConfig(
+            level=getattr(logging, cls.LOG_LEVEL.upper()),
+            format=cls.LOG_FORMAT,
+            handlers=[
+                logging.StreamHandler(),
+                logging.FileHandler(cls.CACHE_DIR / 'app.log')
+            ]
+        )
 
     @classmethod
     def validate(cls):
